@@ -35,6 +35,3 @@ def test_transforms(examples):
 
 training_dataset.set_transform(train_transforms)
 validation_dataset.set_transform(test_transforms)
-
-for example in training_dataset.select(range(5)):
-    print(example['pixel_values'].shape)
