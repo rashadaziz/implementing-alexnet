@@ -46,9 +46,9 @@ def get_dataloaders_pca(sample_size=0.1, batch_size=256, num_workers=4):
     training_dataset.set_transform(pca_transform)
     validation_dataset.set_transform(pca_transform)
 
-    pca_subsample = training_dataset.train_test_split(test_size=sample_size, stratify_by_column="label")
-    pca_subsample_val = validation_dataset.train_test_split(test_size=sample_size, stratify_by_column="label")
-    pca_subsample_test = test_dataset.train_test_split(test_size=sample_size, stratify_by_column="label")
+    pca_subsample = training_dataset.train_test_split(test_size=sample_size, stratify_by_column="label", seed=42)
+    pca_subsample_val = validation_dataset.train_test_split(test_size=sample_size, stratify_by_column="label", seed=42)
+    pca_subsample_test = test_dataset.train_test_split(test_size=sample_size, stratify_by_column="label", seed=42)
 
     train_loader = DataLoader(pca_subsample["test"], batch_size=batch_size, shuffle=False, 
                             num_workers=num_workers, collate_fn=collate_fn)
