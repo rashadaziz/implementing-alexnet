@@ -70,9 +70,13 @@ def get_dataloaders(sample_size=1, batch_size=32, num_workers=4, transform=_basi
     validation_dataset.set_transform(_test_transforms)
     test_dataset.set_transform(_test_transforms)
 
-    subsample = training_dataset.train_test_split(test_size=sample_size, stratify_by_column="label", seed=42)
+    if sample_size < 1:
+        # Subsample the training dataset
+        train_data = training_dataset.train_test_split(test_size=sample_size, stratify_by_column="label", seed=42)["test"]
+    else:
+        train_data = training_dataset
 
-    train_loader = DataLoader(subsample["test"], batch_size=batch_size, shuffle=False, 
+    train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=False, 
                             num_workers=num_workers, collate_fn=collate_fn)
     val_loader = DataLoader(validation_dataset, batch_size=batch_size, shuffle=False, 
                           num_workers=num_workers, collate_fn=collate_fn)
