@@ -20,11 +20,11 @@ class ImageNetPCA:
                 self._running_sum += image.sum(dim=(0, 2, 3))
                 self._pixel_count += image.numel() // 3 # Assuming 3 channels
 
-                flattened_channels = image.transpose(1, 0).reshape(3, -1)
+                flattened_channels = image.transpose(1, 0).reshape(3, -1) # reshape to (3, batch_size * height * width)
 
                 outer_product = torch.mm(flattened_channels, flattened_channels.t())
                 self._running_outer_product += outer_product
-                
+
                 pbar.update(image.size(0))
 
         mean_vector = self._running_sum / self._pixel_count
