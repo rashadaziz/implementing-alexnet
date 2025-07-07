@@ -11,7 +11,7 @@ class LocalReponseNormalization(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:   
         x_squared = x**2
-        x_cumsum = nn.functional.pad(x_squared.cumsum(dim=1), (0, 0, 0, 0, 1, 0)) # Add padding to the front of the channels (before the first channel)
+        x_cumsum = nn.functional.pad(x_squared.cumsum(dim=1), (0, 0, 0, 0, 1, 0)) # Add padding to the front of the channels (before the first channel) to handle Sum[-1] case
 
         indices = torch.arange(0, x.size(1), device=x.device)
         lower_bounds = (indices - self.n // 2).clamp(min=0)
@@ -20,7 +20,7 @@ class LocalReponseNormalization(nn.Module):
         expanded_lower_bounds = lower_bounds.view(1, x.size(1), 1, 1).expand_as(x)
         expanded_upper_bounds = upper_bounds.view(1, x.size(1), 1, 1).expand_as(x)
 
-        # Sum(i to j) = S[j] - S[i - 1], however since we've added padding to handle the S[-1] case, S[j] = S[j+1] & S[i-1] = S[i]
+        # Sum(i to j) = Sum[j] - Sum[i - 1], however since we've added padding to handle the Sum[-1] case, Sum[j] = Sum[j+1] & Sum[i-1] = Sum[i]
         start = x_cumsum.gather(dim=1, index=expanded_lower_bounds)
         end = x_cumsum.gather(dim=1, index=expanded_upper_bounds + 1)
         sum_squared = end - start
