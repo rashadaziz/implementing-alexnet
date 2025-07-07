@@ -13,7 +13,7 @@ class LocalReponseNormalization(nn.Module):
         x_squared = x**2
         x_cumsum = nn.functional.pad(x_squared.cumsum(dim=1), (0, 0, 0, 0, 1, 0)) # Add padding to the front of the channels (before the first channel)
 
-        indices = torch.arange(0, x.size(1))
+        indices = torch.arange(0, x.size(1), device=x.device)
         lower_bounds = (indices - self.n // 2).clamp(min=0)
         upper_bounds = (indices + self.n // 2).clamp(max=x.size(1) - 1)
 
