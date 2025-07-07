@@ -1,12 +1,12 @@
 import torch
 from torch import nn
+from .local_response_normalization import LocalReponseNormalization
 
-"""
-AlexNet Implementation without Local Response Normalization (LRN).
-"""
-class AlexNetBase(nn.Module):
+class AlexNet(nn.Module):
     def __init__(self, ):
-        super(AlexNetBase, self).__init__()
+        super(AlexNet, self).__init__()
+
+        self.lrn = LocalReponseNormalization()
         
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=96, kernel_size=11, stride=4, padding=2)
         self.conv2 = nn.Conv2d(in_channels=self.conv1.out_channels, out_channels=256, kernel_size=5, stride=1, padding='same')
@@ -23,11 +23,13 @@ class AlexNetBase(nn.Module):
         # First convolutional layer with stride 4
         x = self.conv1(x)
         x = torch.nn.functional.relu(x)
+        x = self.lrn(x)
         x = torch.nn.functional.max_pool2d(x, kernel_size=3, stride=2)
 
         # Second convolutional layer
         x = self.conv2(x)
         x = torch.nn.functional.relu(x)
+        x = self.lrn(x)
         x = torch.nn.functional.max_pool2d(x, kernel_size=3, stride=2)
         
         # Third, fourth, and fifth convolutional layers connected without any intervening
