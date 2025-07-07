@@ -11,6 +11,3 @@ The authors borrowed a concept from neuroscience called "lateral inhibition", wh
 Instead of using standard pooling methods where the stride and size of the pooling kernels are equal, they found that using **overlapping** pooling, where the stride < size of pooling kernel makes it more difficult for the model to overfit. They chose a stride of 2 and a pooling kernel size of 3x3 at the end, which reduced the top-1 and top-5 error rates by 0.4% and 0.3%, respectively.
 - ### PCA Data Augmentation
 The authors used an unconventional method of data augmentation where they identified the principal components of the RGB pixel values. Intuitively, this allows us to encode the primary axes of variation in colors across images in the data. The main idea was: "object identity is invariant to changes in the intensity and color of the illumination".
-
-## Todo
-- Add Local Response Normalization (LRN)
